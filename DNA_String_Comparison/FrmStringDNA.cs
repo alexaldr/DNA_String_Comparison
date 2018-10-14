@@ -102,14 +102,14 @@ namespace DNA_String_Comparison
                     //if (dna01[i].Equals(dna02[i]))                                      //14.1 seconds
                     //if (Char.ToUpper(dna01[i]).Equals(Char.ToUpper(dna02[i])))          //14.2 seconds
                     {
-                        //rTxtComparisonResult1.AppendText($"{(char)bArray01[i]}", Color.Gray);
-                        //rTxtComparisonResult2.AppendText($"{(char)bArray02[i]}", Color.Gray);
+                        rTxtComparisonResult1.AppendText($"{(char)bArray01[i]}", Color.Gray);
+                        rTxtComparisonResult2.AppendText($"{(char)bArray02[i]}", Color.Gray);
                     }
                     else
                     {
                         count++;
-                        //rTxtComparisonResult1.AppendText($"{(char)bArray01[i]}", Color.Red);
-                        //rTxtComparisonResult2.AppendText($"{(char)bArray02[i]}", Color.Red);
+                        rTxtComparisonResult1.AppendText($"{(char)bArray01[i]}", Color.Red);
+                        rTxtComparisonResult2.AppendText($"{(char)bArray02[i]}", Color.Red);
                     }
                     i++;
                 }
