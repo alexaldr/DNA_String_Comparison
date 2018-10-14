@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace DNA_String_Comparison
 {
@@ -70,10 +71,38 @@ namespace DNA_String_Comparison
             FileSelect(lblDNA02, ref dna02);
         }
 
-        private void rTxtComparisonResult1_HScroll(object sender, EventArgs e)
+        //Code to sync HScroll
+        public enum ScrollBarType : uint
         {
-
+            SbHorz = 0,
+            SbVert = 1,
+            SbCtl = 2,
+            SbBoth = 3
         }
+
+        public enum Message : uint
+        {
+            WM_HSCROLL = 0x0114
+        }
+
+        public enum ScrollBarCommands : uint
+        {
+            SB_THUMBPOSITION = 4
+        }
+        [DllImport("User32.dll")]
+        public extern static int GetScrollPos(IntPtr hWnd, int nBar);
+
+        [DllImport("User32.dll")]
+        public extern static int SendMessage(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
+
+        private void rTxtComparisonResult2_HScroll(object sender, EventArgs e)
+        {
+            int nPos = GetScrollPos(rTxtComparisonResult2.Handle, (int)ScrollBarType.SbHorz);
+            nPos <<= 16;
+            uint wParam = (uint)ScrollBarCommands.SB_THUMBPOSITION | (uint)nPos;
+            SendMessage(rTxtComparisonResult1.Handle, (int)Message.WM_HSCROLL, new IntPtr(wParam), new IntPtr(0));
+        }
+
 
         private void btnDNAComparison_Click(object sender, EventArgs e)
         {
@@ -92,18 +121,16 @@ namespace DNA_String_Comparison
             if (dna01.Length == dna02.Length)
             {
                 stopwatch.Start();
-                //for (int i = 0; i < dna01.Length; i++)
-                //foreach(char dna in dna01)
                 foreach (byte bElements in bArray01)
                 {
-                    if (bArray01[i] == bArray02[i])                 //13.4 seconds
+                    if (bArray01[i] == bArray02[i])                                       //13.4 seconds
                     //if(Char.ToUpper(dna01[i]).CompareTo(Char.ToUpper(dna01[i]))==0)     //13.6 seconds
                     //if (string.CompareOrdinal($"{dna01[i]}", $"{dna02[i]}") == 0)       //13.8 seconds
                     //if (dna01[i].Equals(dna02[i]))                                      //14.1 seconds
                     //if (Char.ToUpper(dna01[i]).Equals(Char.ToUpper(dna02[i])))          //14.2 seconds
                     {
-                        rTxtComparisonResult1.AppendText($"{(char)bArray01[i]}", Color.Gray);
-                        rTxtComparisonResult2.AppendText($"{(char)bArray02[i]}", Color.Gray);
+                        rTxtComparisonResult1.AppendText($"{(char)bArray01[i]}", Color.Green);
+                        rTxtComparisonResult2.AppendText($"{(char)bArray02[i]}", Color.Green);
                     }
                     else
                     {
@@ -123,44 +150,6 @@ namespace DNA_String_Comparison
             {
                 MessageBox.Show("Operação cancelada!\nAs sequências de DNA possuem comprimentos diferentes!", "Cancelado!", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-
-
-            /*
-            if (dna01.Length == dna02.Length)
-            {
-                stopwatch.Start();
-                for (int i = 0; i < dna01.Length; i++)
-                //foreach(char dna in dna01)
-                {
-                    if (char.ToUpper(dna01[i]) == char.ToUpper(dna02[i]))                 //13.4 seconds
-                    //if(Char.ToUpper(dna01[i]).CompareTo(Char.ToUpper(dna01[i]))==0)     //13.6 seconds
-                    //if (string.CompareOrdinal($"{dna01[i]}", $"{dna02[i]}") == 0)       //13.8 seconds
-                    //if (dna01[i].Equals(dna02[i]))                                      //14.1 seconds
-                    //if (Char.ToUpper(dna01[i]).Equals(Char.ToUpper(dna02[i])))          //14.2 seconds
-                    {
-                        rTxtComparisonResult1.AppendText($"{dna01[i]}", Color.Gray);
-                        rTxtComparisonResult2.AppendText($"{dna02[i]}", Color.Gray);
-                    }
-                    else
-                    {
-                        count++;
-                        rTxtComparisonResult1.AppendText($"{dna01[i]}", Color.Red);
-                        rTxtComparisonResult2.AppendText($"{dna02[i]}", Color.Red);
-                    }
-                    i++;
-                }
-                stopwatch.Stop();
-                lblResult.Text = $"As sequências possuem {count} base(s) diferente(s)!"
-                               + $"\n\nHá xx subsequências iguais com mais de xx bases."
-                               + $"\n\nA operação demorou {stopwatch.Elapsed.TotalSeconds} segundos para ser concluída!";
-                Cursor.Current = Cursors.Arrow;
-            }
-            else
-            {
-                MessageBox.Show("Operação cancelada!\nAs sequências de DNA possuem comprimentos diferentes!", "Cancelado!", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            */
-
 
 
             /*

@@ -106,7 +106,6 @@
             this.rTxtComparisonResult1.TabIndex = 2;
             this.rTxtComparisonResult1.Text = "";
             this.rTxtComparisonResult1.WordWrap = false;
-            this.rTxtComparisonResult1.HScroll += new System.EventHandler(this.rTxtComparisonResult1_HScroll);
             // 
             // btnDNAComparison
             // 
@@ -131,6 +130,7 @@
             this.rTxtComparisonResult2.TabIndex = 3;
             this.rTxtComparisonResult2.Text = "";
             this.rTxtComparisonResult2.WordWrap = false;
+            this.rTxtComparisonResult2.HScroll += new System.EventHandler(this.rTxtComparisonResult2_HScroll);
             // 
             // lblResult
             // 
